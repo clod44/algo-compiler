@@ -10,34 +10,52 @@
     <!--jquery-->
     <script src="./lib/jquery.min.js"></script>
 
+    <script src="./lib/codemirror/lib/codemirror.js"></script>
+    <script src="./lib/codemirror/addon/hint/show-hint.js"></script>
+    <script src="./lib/codemirror/addon/mode/simple.js"></script>
+    <script src="./lib/codemirror/addon/selection/active-line.js"></script>
+
+    <link rel="stylesheet" href="./lib/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="./lib/codemirror/addon/hint/show-hint.css">
+    <link rel="stylesheet" href="./lib/codemirror/theme/material-darker.css">
+
+
     <title>Algo Compiler - clod44</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.23.0/min/vs/loader.min.js"></script>
+
+    <style>
+        .CodeMirror {
+            width: 100%;
+            height: 100%;
+            word-wrap: break-word;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="container p-3">
-        <button id="compile" class="btn btn-primary">compile</button>
-        <div class="row p-3">
-            <div class="col-6 p-3">
-                <div class="rounded bg-light p-3">
+<body class="vh-100 flex-fill m-0 p-0">
+    <div class="container-fluid p-3 h-100">
+        <div class="d-flex flex-column gap-3">
+            <div class="d-flex gap-3 justify-content-between align-items-center">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="auto-compile" checked>
+                    <label class="form-check-label">Auto compile</label>
+                </div>
+                <button id="compile" class="btn btn-primary">compile</button>
+            </div>
+            <div class="d-flex gap-3 w-100 flex-wrap">
+                <div class="rounded bg-light p-3 flex-grow-1">
                     <div>
-                        <label for="exampleFormControlTextarea1" class="form-label">Algo code:</label>
-                        <textarea class="form-control" id="code" rows="10"></textarea>
+                        <label class="form-label">Algo code:</label>
+                        <textarea class="form-control" id="code" rows="1"></textarea>
                     </div>
                 </div>
-            </div>
-            <div class="col-6 p-3">
-                <div class="rounded bg-light p-3">
+                <div class="rounded bg-light p-3 flex-grow-1">
                     <div>
-                        <label for="exampleFormControlTextarea1" class="form-label">result:</label>
-                        <textarea class="form-control" id="output" rows="10" readonly></textarea>
+                        <label class="form-label">result:</label>
+                        <textarea class="form-control" id="output" rows="1" readonly></textarea>
                     </div>
                 </div>
             </div>
         </div>
-        <hr>
-
-
     </div>
     <script src="./index.js"></script>
 </body>
