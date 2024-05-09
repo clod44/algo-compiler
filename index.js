@@ -398,8 +398,9 @@ $(document).ready(function () {
 
 
     $('#compile').click(function () {
-        var code = editor.getValue();
-        var data = Compile(code);
+        let code = editor.getValue();
+        let maxSteps = $("#max-steps").val() || 1000;
+        let data = Compile(code, maxSteps);
 
         outputEditor.setValue(data.output);
         console.log(data.variables);
