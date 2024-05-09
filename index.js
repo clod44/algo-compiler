@@ -1,21 +1,74 @@
 $(document).ready(function () {
+    let lastSelectedLanguage = localStorage.getItem("selectedLanguage");
+    if (lastSelectedLanguage) {
+        $("#lang").val(lastSelectedLanguage);
 
-    const COMMANDS = {
-        "BAŞLAT": {
-            "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
-                //just goof
-            },
-            "highlight": ["BAŞLAT"]
+    }
+    let language = $("#lang").val() || "en";
+    console.log(language, "selected");
+    $("#lang").on("change", function () {
+        language = $(this).val();
+        localStorage.setItem("selectedLanguage", language);
+        location.reload();
+    });
+
+
+    const LANGUAGEPACKS = {
+        "en": {
+            "START": "START",
+            "IF": "IF",
+            "THEN": "THEN",
+            "ELSE": "ELSE",
+            "ECHO": "ECHO",
+            "LINE": "LINE",
+            "GO": "GO",
+            "FINISH": "FINISH",
+            "COMMENT": "//"
         },
-        "YAZ": {
+        "tr": {
+            "START": "BAŞLAT",
+            "IF": "EĞER",
+            "THEN": "İSE",
+            "ELSE": "DEĞİLSE",
+            "ECHO": "YAZ",
+            "LINE": "SATIR",
+            "GO": "GİT",
+            "FINISH": "BİTİR",
+            "COMMENT": "//"
+        }
+    };
+    if (language in LANGUAGEPACKS) {
+        console.log("language ", language);
+    }
+    else {
+        console.error("language '", language, "' not found. selecting ' en ' instead");
+        alert("language '" + language + "' not found. selecting ' en ' instead");
+        language = "en";
+    }
+    const languagePack = LANGUAGEPACKS[language];
+
+    function GetCommandNameInLanguagePack(command) {
+        return languagePack[command] || LANGUAGEPACKS["en"][command];
+    }
+
+    function createCommands(languagePack) {
+        const commands = {};
+
+        commands[GetCommandNameInLanguagePack("START")] = {
+            "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
+                // do something
+            }
+        };
+
+        commands[GetCommandNameInLanguagePack("ECHO")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 args = resolveArgs(args, variables);
                 var result = doMath(args);
                 outputWrapper.output += result;
-            },
-            "highlight": ["YAZ"]
-        },
-        "SATIR": {
+            }
+        };
+
+        commands[GetCommandNameInLanguagePack("LINE")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 var result = "";
                 if (args.length > 0) {
@@ -23,33 +76,33 @@ $(document).ready(function () {
                     result = doMath(args);
                 }
                 outputWrapper.output += result + "\n";
-            },
-            "highlight": ["SATIR"]
-        },
-        "GİT": {
+            }
+        };
+
+        commands[GetCommandNameInLanguagePack("GO")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 hop.now = args[0] - 1; //in the editor, index starts from 1. but lines array starts from 0
                 hop.return = -1;
-            },
-            "highlight": ["GİT"]
-        },
-        "EĞER": {
+            }
+        };
+
+        commands[GetCommandNameInLanguagePack("IF")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 //this is basically "if-else"
-                //syntax "EĞER ( condition paranthesis ) İSE (ifTrue do this paranthesis) DEĞİLSE ( if false do this paranthesis )"
-                //we know that "EĞER"(first key), wont be in the args
-                //our condition is from index 0 to whichever index has the "İSE"
-                var conditionEndIndex = args.indexOf("İSE");
+                //syntax "IF ( condition ) THEN (ifTrue) ELSE (ifFalse)"
+                //we know that "IF"(first key), wont be in the args
+                //our condition is from index 0 to whichever index has the "THEN"
+                var conditionEndIndex = args.indexOf(GetCommandNameInLanguagePack("THEN"));
                 var condition = args.slice(0, conditionEndIndex);
                 var conditionResult = doMath(resolveArgs(condition, variables));
 
-                var elseIndex = args.indexOf("DEĞİLSE");
+                var elseIndex = args.indexOf(GetCommandNameInLanguagePack("ELSE"));
                 var elseExists = (elseIndex != -1);
 
-                var doTrueIndex = args.indexOf("İSE") + 1;
+                var doTrueIndex = args.indexOf(GetCommandNameInLanguagePack("THEN")) + 1;
                 var doTrueEndIndex = args.length + 1;
                 if (elseExists)
-                    doTrueEndIndex = args.indexOf("DEĞİLSE");
+                    doTrueEndIndex = args.indexOf(GetCommandNameInLanguagePack("ELSE"));
 
                 var doTrue = args.slice(doTrueIndex, doTrueEndIndex);
 
@@ -79,22 +132,27 @@ $(document).ready(function () {
                 console.log("doTrue: " + doTrue);
                 console.log("doFalse: " + doFalse);
                 console.log("hop: " + hop);
-            },
-            "highlight": ["EĞER", "İSE", "DEĞİLSE"]
-        },
-        "//": {
+            }
+        };
+
+        commands[GetCommandNameInLanguagePack("COMMENT")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
-            },
-            "highlight": ["//"]
-        },
-        "BİTİR": {
+                // do nothing
+            }
+        };
+
+        commands[GetCommandNameInLanguagePack("FINISH")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
-                hop.now = 99999
-                hop.return = 99999
-            },
-            "highlight": ["BİTİR"]
-        },
-    };
+                hop.now = 99999;
+                hop.return = 99999;
+            }
+        };
+
+        return commands;
+    }
+
+    const COMMANDS = createCommands(languagePack);
+
     const OPERATIONS = { //primitive math operations are handled with js eval()
         "=": function (varName, varValue, variables, outputWrapper) {
             var finalValue = "noValue";
@@ -159,7 +217,7 @@ $(document).ready(function () {
     }
 
 
-    function Compile(code, maxSteps = 1000) {
+    function Compile(code = "", maxSteps = 1000) {
         var lines = code.split("\n");
         var hop = { now: -1, return: -1 };
         var variables = {};
@@ -167,9 +225,9 @@ $(document).ready(function () {
         //console.log("=======================");
 
         if (lines[0].trim() !== Object.keys(COMMANDS)[0])
-            outputWrapper.output += "missing BAŞLAT command\n";
+            outputWrapper.output += "missing " + GetCommandNameInLanguagePack(languagePack.START) + " command\n";
         if (lines[lines.length - 1].trim() !== Object.keys(COMMANDS)[Object.keys(COMMANDS).length - 1])
-            outputWrapper.output += "missing BİTİR command. REQUIRED\n"; //otherwise it wont work properly and stuck in loops
+            outputWrapper.output += "missing " + GetCommandNameInLanguagePack(languagePack.FINISH) + " command. REQUIRED\n"; //otherwise it wont work properly and stuck in loops
 
 
         for (let i = 0; i < lines.length; i++) {
@@ -222,13 +280,6 @@ $(document).ready(function () {
 
 
 
-
-
-
-
-
-
-
     var textArea = $("#code")[0];
     var editor = CodeMirror.fromTextArea(textArea, {
         mode: "customMode",  // Set custom mode here
@@ -252,7 +303,20 @@ $(document).ready(function () {
         if ($("#auto-compile").is(":checked"))
             $("#compile").trigger("click");
     })
-    editor.setValue("BAŞLAT\nx = 12\nSATIR x\nBİTİR");
+    let defaultCode = "" +
+        GetCommandNameInLanguagePack("START") + "\n" +
+        "num = (3 - 1) * 2 \n" +
+        GetCommandNameInLanguagePack("LINE") + " calculating factorial of num ...\n" +
+        "result = 1\n" +
+        "result *= num\n" +
+        "num --\n" +
+        GetCommandNameInLanguagePack("LINE") + " calculating result * num\n" +
+        GetCommandNameInLanguagePack("IF") + " num > 1 THEN GO 5\n" +
+        GetCommandNameInLanguagePack("IF") + " result > 10 " + GetCommandNameInLanguagePack("THEN") + " size = very big " + GetCommandNameInLanguagePack("ELSE") + " size = small\n" +
+        GetCommandNameInLanguagePack("ECHO") + " Result is result and its size\n" +
+        GetCommandNameInLanguagePack("ECHO") + " !!!\n" +
+        GetCommandNameInLanguagePack("FINISH");
+    editor.setValue(defaultCode);
 
     $("#auto-compile").on("change", function () {
         if ($(this).is(":checked"))
@@ -260,8 +324,8 @@ $(document).ready(function () {
         else
             $("#compile").css("display", "block");
     })
-    //check true the value of auto-compile by default
     $("#auto-compile").trigger("change");
+
 
 
 
@@ -275,10 +339,8 @@ $(document).ready(function () {
         var word = line.slice(start, end);
 
         var allHighlights = [];
-        Object.values(COMMANDS).forEach(function (command) {
-            if (command.highlight && Array.isArray(command.highlight)) {
-                allHighlights.push(...command.highlight);
-            }
+        Object.values(languagePack).forEach(function (command) {
+            allHighlights.push(command);
         });
         var filteredOptions = allHighlights.filter(function (highlight) {
             return highlight.startsWith(word);
@@ -293,10 +355,8 @@ $(document).ready(function () {
     }
 
     var commandHighlights = [];
-    Object.values(COMMANDS).forEach(function (command) {
-        if (command.highlight && Array.isArray(command.highlight)) {
-            commandHighlights.push(...command.highlight);
-        }
+    Object.values(languagePack).forEach(function (command) {
+        commandHighlights.push(command);
     });
 
     function escapeRegExp(pattern) {
@@ -338,4 +398,5 @@ $(document).ready(function () {
         console.log(data.variables);
         console.log(data.output);
     });
+    $("#compile").trigger("click");
 });
