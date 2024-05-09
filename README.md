@@ -1,7 +1,7 @@
 # Algo-Compiler
 Compiles the pseudo "algorithm" code and shows the result
 
-[Try it here](#)
+[Try it here](https://clod44.github.io/algo-compiler/)
 
 ## Features
 ![logo](logo.png)
