@@ -48,21 +48,21 @@
     </style>
 </head>
 
-<body class="vh-100 flex-fill m-0 p-0">
-    <div class="container-fluid p-3 h-100">
+<body class="flex-fill m-0 p-0">
+    <nav class="d-flex gap-3 p-3 pb-2 justify-content-between align-items-center">
+        <img src="./logo.png" class="hover-scale" style="height: 3rem;">
+        <div>
+            <a href="https://github.com/clod44/algo-compiler" target="_blank"
+                class="text-decoration-none text-bg-light bg-gradient  rounded p-1 px-2 d-flex align-items-center justify-content-center gap-2 hover-scale hover-glow">
+                <img src="github.svg" style="filter: contrast(0) brightness(900%); height: 1.2em; width: 1.2em;">
+                <span>clod44</span>
+            </a>
+            <button id="compile" class="btn btn-outline-primary">Compile</button>
+        </div>
+    </nav>
+    <main class="container-fluid p-3 h-100">
         <div class="d-flex flex-column gap-3">
-            <div class="d-flex gap-3 justify-content-between align-items-center">
-                <img src="./logo.png" class="hover-scale" style="height: 3rem;">
-                <div>
-                    <a href="https://github.com/clod44/algo-compiler" target="_blank"
-                        class="text-decoration-none text-bg-light bg-gradient  rounded p-1 px-2 d-flex align-items-center justify-content-center gap-2 hover-scale hover-glow">
-                        <img src="github.svg"
-                            style="filter: contrast(0) brightness(900%); height: 1.2em; width: 1.2em;">
-                        <span>clod44</span>
-                    </a>
-                    <button id="compile" class="btn btn-outline-primary">Compile</button>
-                </div>
-            </div>
+
             <div class="d-flex gap-3 w-100 flex-wrap">
                 <div class="rounded bg-light p-3 flex-grow-1">
                     <div>
@@ -92,8 +92,32 @@
                     </div>
                 </span>
             </div>
+            <div>
+                <ul id="help">
+
+                </ul>
+                <p>compiler is white-space depended. every term must be seperated with white spaces</p>
+                <ul>
+
+                    <li class="text-danger rounded">x=12</li>
+                    <li class="text-danger rounded">x= 12</li>
+                    <li class="text-success rounded">x = 12</li>
+                    <li class="text-danger rounded">x = (12+1)*2</li>
+                    <li class="text-danger rounded">x = (12 + 1) * 2</li>
+                    <li class="text-success rounded">x = ( 12 + 1 ) * 2</li>
+                    <li>failed math evaluations will most likely to become strings</li>
+                    <li>specified variable name (eg. "x") will evaluate itself to its value whenever possible</li>
+                    <li class="text-warning">
+                        <pre>is = bye bye<br>ECHO hello my name is james<br><span class="text-white">> hello my name bye bye james</span></pre>
+                    </li>
+                </ul>
+                <p>(CTRL + Space) for code suggestion</p>
+            </div>
         </div>
-    </div>
+    </main>
+    <footer>
+        <p class="text-center text-muted m-0 p-0 bg-light" style="font-size: 0.7rem;">made by clod44</p>
+    </footer>
     <script src="./index.js"></script>
 </body>
 

@@ -56,8 +56,9 @@ $(document).ready(function () {
 
         commands[GetCommandNameInLanguagePack("START")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
-                // do something
-            }
+                // do nothing
+            },
+            "description": "Starts the program. must be added at the beginning of the program" //good practice
         };
 
         commands[GetCommandNameInLanguagePack("ECHO")] = {
@@ -65,7 +66,8 @@ $(document).ready(function () {
                 args = resolveArgs(args, variables);
                 var result = doMath(args);
                 outputWrapper.output += result;
-            }
+            },
+            "description": "Evaluates and outputs the result"
         };
 
         commands[GetCommandNameInLanguagePack("LINE")] = {
@@ -76,14 +78,16 @@ $(document).ready(function () {
                     result = doMath(args);
                 }
                 outputWrapper.output += result + "\n";
-            }
+            },
+            "description": "Same as ECHO but adds a new line after that"
         };
 
         commands[GetCommandNameInLanguagePack("GO")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 hop.now = args[0] - 1; //in the editor, index starts from 1. but lines array starts from 0
                 hop.return = -1;
-            }
+            },
+            "description": "Makes the program jump to the specified line"
         };
 
         commands[GetCommandNameInLanguagePack("IF")] = {
@@ -132,20 +136,23 @@ $(document).ready(function () {
                 console.log("doTrue: " + doTrue);
                 console.log("doFalse: " + doFalse);
                 console.log("hop: " + hop);
-            }
+            },
+            "description": "Does X if given Y condition is true. optionaly does Z if given condition is false. Don't add the ELSE and <ifFalseDo> if other condition is not needed. usage: <b>IF (condition) THEN (ifTrueDo) ELSE (ifFalseDo)</b>"
         };
 
         commands[GetCommandNameInLanguagePack("COMMENT")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 // do nothing
-            }
+            },
+            "description": "Allows you to add comments to the program. Comments does not effect anything but they still take up lines in the program. '<span class='text-success'>// this is a comment</span>'"
         };
 
         commands[GetCommandNameInLanguagePack("FINISH")] = {
             "function": function (args, variables, outputWrapper, lines, lineIndex, hop = { now: -1, return: -1 }) {
                 hop.now = 99999;
                 hop.return = 99999;
-            }
+            },
+            "description": "Finished the program. mut be added to the end of the program" //literally. otherwise IF-ELSE wont work and infinite loops might be created
         };
 
         return commands;
@@ -399,4 +406,13 @@ $(document).ready(function () {
         console.log(data.output);
     });
     $("#compile").trigger("click");
+
+
+    //fill the help div with the COMMANDS and their .descriptions
+    Object.keys(COMMANDS).forEach(function (key) {
+        $("#help").append("<li><b class='text-primary'>" + key + "</b> - " + (COMMANDS[key].description || "no description") + "</li>");
+    })
+    $("#help").append("<li><b class='text-primary'>Operations: </b> - <span style='font-family:monospace;'>" + (Object.keys(OPERATIONS).join(", ")) + "</span></li>");
+
 });
+
