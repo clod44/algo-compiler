@@ -30,7 +30,7 @@ FINISH
  - `ECHO` - Evaluates and outputs the result
  - `LINE` - Same as ECHO but adds a new line after that
  - `GO` - Makes the program jump to the specified line
- - `IF` - Does X if given Y condition is true. optionaly does Z if given condition is false. Don't add the ELSE and if other condition is not needed. usage: `IF (condition) THEN (ifTrueDo) ELSE (ifFalseDo)`
+ - `IF` - Does X if given Y condition is true. optionaly does Z if given condition is false. Don't add the `ELSE` and `(ifFalseDo)` if other condition is not needed. Usage: `IF (condition) THEN (ifTrueDo) ELSE (ifFalseDo)`
  - `//`- Allows you to add comments to the program. Comments does not effect anything but they still take up lines in the program. '// this is a comment'
  - `FINISH` - Finished the program. mut be added to the end of the program
  - Operations: `-=`, `+=`, `-=`, `*=`, `/=`, `++`, `--`

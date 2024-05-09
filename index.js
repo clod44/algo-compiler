@@ -137,7 +137,7 @@ $(document).ready(function () {
                 console.log("doFalse: " + doFalse);
                 console.log("hop: " + hop);
             },
-            "description": "Does X if given Y condition is true. optionaly does Z if given condition is false. Don't add the ELSE and <ifFalseDo> if other condition is not needed. usage: <b>IF (condition) THEN (ifTrueDo) ELSE (ifFalseDo)</b>"
+            "description": "Does X if given Y condition is true. optionaly does Z if given condition is false. Don't add the ELSE and (ifFalseDo) if other condition is not needed. usage: <b>IF (condition) THEN (ifTrueDo) ELSE (ifFalseDo)</b>"
         };
 
         commands[GetCommandNameInLanguagePack("COMMENT")] = {
