@@ -3,6 +3,8 @@ Compiles the pseudo "algorithm" code and shows the result
 
 [Try it here](https://clod44.github.io/algo-compiler/)
 
+This is a "Interpreter". NOT a compiler. but its too late for the correction of terminology.
+
 ## Features
 ![logo](logo.png)
  - [x] Syntax highlight
