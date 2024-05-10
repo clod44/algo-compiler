@@ -41,6 +41,24 @@ const EXAMPLES = {
             y ++
             IF y < Yres THEN GO 6
             FINISH`
+    },
+    [generateUUID()]: {
+        "title": "fibonacci",
+        "language": "en",
+        "version": "1.0",
+        "code": `START
+            p1 = 0
+            fib = 1
+            steps = 10
+            temp = fib
+            fib += p1
+            p1 = temp
+            ECHO fibonacci step steps
+            LINE th ...
+            LINE >> result fib
+            steps --
+            IF steps > 0 THEN GO 5
+            FINISH`
     }
 }
 $(document).ready(function () {
